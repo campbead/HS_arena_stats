@@ -11,6 +11,7 @@ let's load the data and have a look.
 
 ```{r}
 library(dplyr)
+library(ggplot2)
 appearence_data <- read.csv('data/Appearance_Rates.csv')
 ```
 
@@ -64,4 +65,22 @@ Ok so these range from about 400 - 300 times
 
 I'm wondering what the shape of those likelihood looks like.  Linearly? Decaying? Stepped?
 
-That'll be my next plot.
+That'll be my next plot.  This will be a lot like the Rooms ordering from my Legend of Zelda analysis Check it out if you're interested, [LoZscraper](https://github.com/campbead/LoZscraper).
+
+
+
+```{r}
+stripped_data <- appearence_data %>%
+  group_by(Draft.Class) %>%
+  select(Draft.Class,Average)
+
+stripped_data <- stripped_data %>%
+  group_by(Draft.Class) %>%
+  mutate(ranking = rank(-Average,ties.method = 'first'))
+```
+Wow that did EXACTLY what I wanted.
+```{r}
+ggplot(data = stripped_data, aes(x=ranking, y=Average)) +
+ geom_point(aes(color = Draft.Class))
+```
+
