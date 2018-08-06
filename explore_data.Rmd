@@ -28,5 +28,40 @@ So that gives us top 10 cards by average occurances/draft for each class.  I had
 help("top_n")
 ```
 
-So pretty great function, it also can order by ascending by using a minus `-` flag.
+So pretty great function, it also can order by ascending by using a minus `-` flag.  It says that the function is a wrapper for using the `filter()` and the `min_rank()` functions.
 
+Let's look at just the top single card for each class
+
+```{r}
+top_card_each_class <- appearence_data %>%
+  group_by(Draft.Class) %>%
+  top_n(1, Average)
+
+print(top_card_each_class)
+```
+These are all either common or basic cards and with the exception of Warrior, they are all Spells.  
+
+Well maybe the next thing to do is to take a look at the least common for each class:
+```{r}
+lowest_card_each_class <- appearence_data %>%
+  group_by(Draft.Class) %>%
+  top_n(-1, Average)
+
+print(lowest_card_each_class)
+```
+Holy Millhouse Cho. Hearthstone doesn't offer Millhouse Manastorm or Lorewalker Cho very often.  Now my next question is how big is that spread?
+```{r}
+class_spreads_high<- top_card_each_class %>%
+  select(Average)
+class_spreads_low <- lowest_card_each_class %>%
+  select(Average)
+class_spreads <- class_spreads_high
+class_spreads$Low_average <- class_spreads_low$Average
+
+class_spreads$ratio <- class_spreads$Average / class_spreads$Low_average
+```
+Ok so these range from about 400 - 300 times 
+
+I'm wondering what the shape of those likelihood looks like.  Linearly? Decaying? Stepped?
+
+That'll be my next plot.
