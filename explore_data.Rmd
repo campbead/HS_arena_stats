@@ -1,0 +1,32 @@
+---
+title: "Hearthstone Arena Statistic Exploration"
+output: html_notebook
+---
+
+Hearthstone just released some official Arena card data.  I think this is super cool since I don't know they have every fully released this data to the public.  The community has been asking for some official data for some time. 
+
+https://playhearthstone.com/en-gb/blog/21964711/developer-insights-12-0-arena-update-with-kris-zierhut
+
+let's load the data and have a look.
+
+```{r}
+library(dplyr)
+appearence_data <- read.csv('data/Appearance_Rates.csv')
+```
+
+Ok so the first thing we might do is see what the top 10 cards are in each class
+
+```{r}
+top_10_in_each_class <- appearence_data %>%
+  group_by(Draft.Class) %>%
+  top_n(10, Average)
+```
+
+So that gives us top 10 cards by average occurances/draft for each class.  I had to look up that function `top_n`.  Let's get a little more infomation on the function.
+
+```{r}
+help("top_n")
+```
+
+So pretty great function, it also can order by ascending by using a minus `-` flag.
+
