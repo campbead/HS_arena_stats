@@ -83,4 +83,23 @@ Wow that did EXACTLY what I wanted.
 ggplot(data = stripped_data, aes(x=ranking, y=Average)) +
  geom_point(aes(color = Draft.Class))
 ```
+That worked perfectly.  This is really cool figure showing the shape of the likelihood of each card.  What we can see is overall shape is of a decaying exponential, but there are some finer structures like plateaus.  I suspect these plateaus are related to the buckets, which is in the other dataset.  Let's a quick look at a single Class
+```{r}
+# filter out Priest data
+Priest_rankings <- stripped_data %>%
+  filter(Draft.Class == 'Priest')
 
+# plot priest data
+ggplot(data = Priest_rankings, aes(x=ranking, y=Average)) +
+ geom_point(color = 'pink',size = 0.5)
+```
+Looking at this figure it looks less exponenetial with the cards offered most often.  There is a pretty clear break after card 20 or so.  Let's explore that in a bit more depth.
+```{r}
+# plot priest data zoomed in 
+ggplot(data = Priest_rankings, aes(x=ranking, y=Average)) +
+ geom_point(color = 'pink',size = 0.5) + 
+  coord_cartesian(xlim =c(0,50))
+```
+From here it appears like the 15-18 most common cards are really in a league of their own.  
+
+I'm wondering what that looks like in a CDF.  
