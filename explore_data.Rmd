@@ -103,3 +103,23 @@ ggplot(data = Priest_rankings, aes(x=ranking, y=Average)) +
 From here it appears like the 15-18 most common cards are really in a league of their own.  
 
 I'm wondering what that looks like in a CDF.  
+```{r}
+# plot priest data zoomed in 
+ggplot(data = Priest_rankings, aes(x=Average)) +
+  stat_ecdf(pad = FALSE)
+```
+This `stat_ecdf` function doesn't do exactly what i'm looking for since it only works on one axis.  
+
+I think this fixes it
+```{r}
+# use the cumsum function to calcu a cumulative sum on Average, then divide by 90 to normalize
+Priest_rankings$cumsum <- cumsum(Priest_rankings$Average)/90
+
+# plot
+ggplot(data = Priest_rankings, aes(x=ranking, y=cumsum)) +
+ geom_point(color = 'pink',size = 0.5) +
+  ylab('cummulative probablity') +
+  xlab('card rank number')
+```
+Ok so there are some interesting features here.  63 of 463 cards are roughly half of those seen in drafts.  Each draft you'll see 90 cards, so 45 of those cards seen will selected from just 63 cards.  The half of cards (231) are the least likely to appear, will only appear less than 8% of the time.  So of the 90 cards you see in a draft about 7 of them will be from the lowest likelihood half.  An interesting insight.
+
